@@ -2,3 +2,10 @@ pycache/
 *.pyc
 *.pyo
 *.pyd
+*.pyi
+
+venv/
+env/
+.venv/
+
+.env
