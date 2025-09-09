@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_custom_model_user,custom.model.user,model_custom_model,base.group_user,1,1,1,1
+access_custom_model_line_user,custom.model.line.user,model_custom_model_line,base.group_user,1,1,1,1
+access_create_partner_wizard_user,create.partner.wizard.user,model_create_partner_wizard,base.group_user,1,1,1,1

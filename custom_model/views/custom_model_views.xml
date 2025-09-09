@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_custom_model_list" model="ir.ui.view">
+        <field name="name">custom.model.list</field>
+        <field name="model">custom.model</field>
+        <field name="arch" type="xml">
+            <list string="Custom Models">
+                <field name="text"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="date_field"/>
+                <field name="many2one_field"/>
+                <field name="computed_field"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_custom_model_form" model="ir.ui.view">
+        <field name="name">custom.model.form</field>
+        <field name="model">custom.model</field>
+        <field name="arch" type="xml">
+            <form string="Custom Model">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                    <button name="action_show_all_fields" 
+                            string="Show All Fields" 
+                            type="object" 
+                            class="oe_highlight"
+                            invisible="id != False"/>
+                    <button name="action_create_person" 
+                            string="Create Person" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="is_company == True"/>
+                    <button name="action_create_company" 
+                            string="Create Company" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="is_company == False"/>
+                    <button name="action_create_partner_wizard" 
+                            string="CREATE PARTNER" 
+                            type="object" 
+                            class="btn-success"/>
+                    <button name="action_confirm" 
+                            string="Confirm" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_draft" 
+                            string="Set to Draft" 
+                            type="object" 
+                            class="btn-secondary"
+                            invisible="state != 'confirmed'"/>
+                </header>
+                <sheet>
+                    <!-- Statusbar -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_confirm" 
+                                type="object" 
+                                class="oe_stat_button"
+                                icon="fa-check"
+                                invisible="state != 'draft'">
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                        </button>
+                    </div>
+                    
+                    <!-- Summary Block -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="text" placeholder="Enter title..." class="o_text_overflow"/>
+                        </h1>
+                    </div>
+                    
+                    <group string="SUMMARY" class="oe_highlight">
+                        <group>
+                            <field name="total_offer_value" widget="monetary" readonly="state == 'confirmed'"/>
+                            <field name="max_delivery_days" readonly="state == 'confirmed'"/>
+                            <field name="avg_expected_coefficient" readonly="state == 'confirmed'"/>
+                            <field name="avg_min_coefficient" readonly="state == 'confirmed'"/>
+                            <field name="total_discount_percent"/>
+                        </group>
+                        <group>
+                            <field name="avg_client_discount" readonly="state == 'confirmed'"/>
+                            <field name="actual_agent_commission" widget="monetary" readonly="state == 'confirmed'"/>
+                            <field name="actual_agent_commission_percent" readonly="state == 'confirmed'"/>
+                            <field name="total_purchasing" widget="monetary" readonly="state == 'confirmed'"/>
+                        </group>
+                    </group>
+                    <!-- Basic Fields - Always Visible -->
+                    <group string="Basic Information">
+                        <group>
+                            <field name="text"/>
+                            <field name="required_field"/>
+                            <field name="is_company"/>
+                            <field name="check_all"/>
+                            <field name="check1"/>
+                            <field name="check2"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Additional Fields - Only After Save -->
+                    <notebook invisible="id == False">
+                        <!-- Basic Information Tab -->
+                        <page string="Basic Information" name="basic_info">
+                            <group>
+                                <group string="Text Fields">
+                                    <field name="char_field"/>
+                                    <field name="html_field"/>
+                                    <field name="default_field"/>
+                                    <field name="readonly_field"/>
+                                    <field name="help_field"/>
+                                    <field name="placeholder_field"/>
+                                </group>
+                                <group string="Numeric Fields">
+                                    <field name="integer_field"/>
+                                    <field name="float_field"/>
+                                    <field name="monetary_field"/>
+                                    <field name="currency_id"/>
+                                    <field name="time_field"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <!-- Selection and Status Tab -->
+                        <page string="Selection and Status" name="selection_status">
+                            <group>
+                                <group string="Basic Selections">
+                                    <field name="select1"/>
+                                    <field name="select2"/>
+                                    <field name="state"/>
+                                    <field name="priority"/>
+                                </group>
+                            </group>
+                            <group string="Boolean Fields">
+                                <group>
+                                    <field name="boolean1" invisible="not (select1 == '1' or select2 == '4')"/>
+                                    <field name="boolean2" invisible="not (select1 == '1' or select2 == '5')"/>
+                                    <field name="boolean3" invisible="not (select1 == '1' or select2 == '6')"/>
+                                    <field name="boolean4" invisible="not (select1 == '2' or select2 == '4')"/>
+                                    <field name="boolean5" invisible="not (select1 == '2' or select2 == '5')"/>
+                                </group>
+                                <group>
+                                    <field name="boolean6" invisible="not (select1 == '2' or select2 == '6')"/>
+                                    <field name="boolean7" invisible="not (select1 == '3' or select2 == '4')"/>
+                                    <field name="boolean8" invisible="not (select1 == '3' or select2 == '5')"/>
+                                    <field name="boolean9" invisible="not (select1 == '3' or select2 == '6')"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <!-- Date and Time Tab -->
+                        <page string="Date and Time" name="date_time">
+                            <group>
+                                <group string="Date Fields">
+                                    <field name="date_field"/>
+                                    <field name="datetime_field"/>
+                                </group>
+                                <group string="Time Fields">
+                                    <field name="time_field"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <!-- Binary and Media Tab -->
+                        <page string="Binary and Media" name="binary_media">
+                            <group>
+                                <group string="Binary Fields">
+                                    <field name="binary_field"/>
+                                    <field name="image_field"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <!-- Relational Fields Tab -->
+                        <page string="Relational Fields" name="relational">
+                            <group>
+                                <group string="Many2One Fields">
+                                    <field name="many2one_field"/>
+                                    <field name="domain_field"/>
+                                    <field name="context_field"/>
+                                </group>
+                                <group string="Many2Many Fields">
+                                    <field name="many2many_field"/>
+                                </group>
+                            </group>
+                            <field name="one2many_field">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                    <field name="total"/>
+                                </list>
+                            </field>
+                        <field name="order_lines">
+                            <list editable="bottom">
+                                <field name="sequence" widget="handle" readonly="state == 'confirmed'"/>
+                                <field name="name" readonly="state == 'confirmed'"/>
+                                <field name="quantity" readonly="state == 'confirmed'"/>
+                                <field name="price_unit" readonly="state == 'confirmed'"/>
+                                <field name="discount"/>
+                                <field name="tax_amount" readonly="state == 'confirmed'"/>
+                                <field name="price_subtotal"/>
+                                <field name="price_total"/>
+                            </list>
+                        </field>
+                        </page>
+                        
+                        <!-- Computed and Related Tab -->
+                        <page string="Computed and Related" name="computed_related">
+                            <group>
+                                <group string="Computed Fields">
+                                    <field name="computed_field"/>
+                                    <field name="computed_boolean"/>
+                                    <field name="depends_field"/>
+                                </group>
+                                <group string="Related Fields">
+                                    <field name="partner_name"/>
+                                    <field name="partner_email"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <!-- Widget Fields Tab -->
+                        <page string="Widget Fields" name="widget_fields">
+                            <group>
+                                <group string="Basic Widgets">
+                                    <field name="widget_text_field"/>
+                                    <field name="widget_html_field"/>
+                                    <field name="widget_url_field"/>
+                                    <field name="widget_email_field"/>
+                                    <field name="widget_phone_field"/>
+                                    <field name="widget_password_field"/>
+                                </group>
+                                <group string="Special Fields">
+                                    <field name="color_field"/>
+                                    <field name="progress_field"/>
+                                    <field name="gauge_field"/>
+                                    <field name="sparkline_field"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <!-- Security and Groups Tab -->
+                        <page string="Security and Groups" name="security_groups">
+                            <group>
+                                <field name="groups_field"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_custom_model_search" model="ir.ui.view">
+        <field name="name">custom.model.search</field>
+        <field name="model">custom.model</field>
+        <field name="arch" type="xml">
+            <search string="Search Custom Models">
+                <field name="text"/>
+                <field name="char_field"/>
+                <field name="many2one_field"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="date_field"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <filter string="High Priority" name="high_priority" domain="[('priority', 'in', ['2', '3'])]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date_field:month'}"/>
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'many2one_field'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_model" model="ir.actions.act_window">
+        <field name="name">Custom Models</field>
+        <field name="res_model">custom.model</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_draft': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first custom model!
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_custom_model"
+              name="Custom Model"
+              parent="base.menu_custom"
+              action="action_custom_model"
+              sequence="10"/>
+</odoo>
