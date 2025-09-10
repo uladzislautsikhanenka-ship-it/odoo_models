@@ -1,11 +1,30 @@
-pycache/
-*.pyc
+__pycache__/
+*.py[cod]
 *.pyo
 *.pyd
 *.pyi
 
+# build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# virtualenvs
+.venv/
 venv/
 env/
-.venv/
 
+# env files
 .env
+
+# editors/OS
+.vscode/
+.idea/
+.DS_Store
+
+# Odoo common
+*.log
+*.pot
+*.swp
+*.swo
