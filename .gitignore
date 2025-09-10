@@ -4,26 +4,21 @@ __pycache__/
 *.pyd
 *.pyi
 
-# build artifacts
 build/
 dist/
 *.egg-info/
 .eggs/
 
-# virtualenvs
 .venv/
 venv/
 env/
 
-# env files
 .env
 
-# editors/OS
 .vscode/
 .idea/
 .DS_Store
 
-# Odoo common
 *.log
 *.pot
 *.swp
