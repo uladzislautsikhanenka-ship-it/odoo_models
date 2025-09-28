@@ -1,0 +1,392 @@
+/* Primary Contact Styling - Python/XML Version */
+
+.o_primary_contact_checkbox {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+}
+
+/* Specific styling for kanban cards in Contacts & Addresses */
+.o_kanban_record .o_primary_contact_checkbox {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 15;
+}
+
+/* Primary contact toggle button styling */
+.o_primary_contact_checkbox .o_primary_contact_toggle {
+    background-color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    z-index: 25;
+    min-width: 24px;
+    min-height: 24px;
+    display: inline-block;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    color: white;
+    font-size: 12px;
+}
+
+.o_primary_contact_checkbox .o_primary_contact_toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+    background-color: #b02a37;
+    border-color: #b02a37;
+}
+
+.o_primary_contact_checkbox .o_primary_contact_toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}
+
+.o_primary_contact_checkbox .o_primary_contact_toggle i {
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.o_primary_contact_checkbox .o_primary_contact_toggle:hover i {
+    transform: scale(1.2);
+}
+
+.o_primary_contact_badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+}
+
+.o_primary_contact_badge .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 0.25rem;
+}
+
+.o_primary_contact_indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+}
+
+.o_primary_contact_indicator .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.o_primary_contact_label {
+    position: absolute;
+    top: 30px;
+    right: 8px;
+    z-index: 10;
+}
+
+.o_primary_contact_label .badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.o_kanban_record:hover .o_primary_contact_badge {
+    opacity: 0.8;
+}
+
+.o_kanban_record:hover .o_primary_contact_checkbox {
+    opacity: 0.9;
+}
+
+/* Kanban card specific styling */
+.o_kanban_record {
+    position: relative;
+    overflow: visible;
+}
+
+.o_kanban_record .o_primary_contact_label {
+    position: absolute;
+    top: 30px;
+    right: 8px;
+    z-index: 15;
+    font-size: 0.7rem;
+}
+
+/* Ensure checkbox is visible on top of card content */
+.o_kanban_record .o_primary_checkbox {
+    position: relative;
+    z-index: 20;
+    background-color: white;
+    border: 2px solid #dc3545;
+}
+
+/* Hide checkbox for non-contact types */
+.o_kanban_record .o_primary_contact_checkbox[style*="display: none"] {
+    display: none !important;
+}
+
+/* Modal window photo styling */
+.o_modal .oe_avatar,
+.modal .oe_avatar,
+.o_dialog .oe_avatar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #dc3545;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+.o_modal .oe_avatar img,
+.modal .oe_avatar img,
+.o_dialog .oe_avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Default avatar icon when no image */
+.o_modal .oe_avatar:empty::before,
+.modal .oe_avatar:empty::before,
+.o_dialog .oe_avatar:empty::before {
+    content: "\f007"; /* Font Awesome user icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: #6c757d;
+}
+
+/* Primary contact field styling in modal */
+.o_modal .field_is_primary,
+.modal .field_is_primary,
+.o_dialog .field_is_primary {
+    background-color: #fff5f5;
+    border: 2px solid #dc3545;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.o_modal .field_is_primary .o_boolean_button,
+.modal .field_is_primary .o_boolean_button,
+.o_dialog .field_is_primary .o_boolean_button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.o_modal .field_is_primary .o_boolean_button:hover,
+.modal .field_is_primary .o_boolean_button:hover,
+.o_dialog .field_is_primary .o_boolean_button:hover {
+    background-color: #b02a37;
+    transform: translateY(-1px);
+}
+
+.o_modal .field_is_primary .o_boolean_button.btn-primary,
+.modal .field_is_primary .o_boolean_button.btn-primary,
+.o_dialog .field_is_primary .o_boolean_button.btn-primary {
+    background-color: #28a745;
+}
+
+.o_modal .field_is_primary .o_boolean_button.btn-primary:hover,
+.modal .field_is_primary .o_boolean_button.btn-primary:hover,
+.o_dialog .field_is_primary .o_boolean_button.btn-primary:hover {
+    background-color: #218838;
+}
+
+
+/* Checkbox styling - make sure it's clickable and blocks modal */
+.o_primary_contact_checkbox {
+    pointer-events: auto !important;
+    z-index: 1000;
+    position: relative;
+    cursor: pointer;
+    /* Блокируем клики по kanban записи в этой области */
+    isolation: isolate;
+}
+
+.o_kanban_record {
+    pointer-events: auto;
+}
+
+/* Make checkbox itself clickable */
+.o_primary_contact_checkbox .o_primary_checkbox {
+    pointer-events: auto !important;
+    z-index: 1001;
+    position: relative;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+/* Блокируем клики по kanban записи в области чекбокса */
+.o_kanban_record .o_primary_contact_checkbox {
+    /* Создаем изолированный контекст */
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1000;
+    /* Блокируем всплытие событий */
+    pointer-events: auto;
+}
+
+/* Дополнительная защита - блокируем клики по kanban записи */
+.o_kanban_record:has(.o_primary_contact_checkbox) {
+    position: relative;
+}
+
+/* Убираем проблемный псевдоэлемент */
+.o_primary_contact_checkbox::before {
+    display: none;
+}
+
+/* Enhanced Kanban Card Styling */
+.o_kanban_record {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    background: white;
+    min-height: 120px;
+}
+
+.o_kanban_record:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* Contact phone styling */
+.o_contact_phone {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.o_contact_phone .fa-phone {
+    color: #28a745;
+}
+
+/* Primary contact field styling */
+.field_is_primary {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.field_is_primary .o_checkbox {
+    color: #dc3545;
+}
+
+/* Sale order line styling for excluded products */
+.o_sale_order_line_excluded {
+    opacity: 0.6;
+    background-color: #f8f9fa;
+}
+
+.o_sale_order_line_excluded .field_product_id {
+    pointer-events: none;
+}
+
+/* Kanban card content styling */
+.o_kanban_record main {
+    padding: 12px;
+}
+
+.o_kanban_record .display_name {
+    color: #212529;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.o_kanban_record .text-muted {
+    color: #6c757d !important;
+    font-size: 0.875rem;
+}
+
+/* Avatar styling */
+.o_kanban_record aside {
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.o_kanban_record .o_kanban_image_fill {
+    border-radius: 8px 0 0 8px;
+    overflow: hidden;
+}
+
+/* Company logo positioning */
+.o_kanban_record .position-absolute.bottom-0.end-0 {
+    border-radius: 4px;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Contact delete section styling */
+.o_contact_delete_section {
+    background-color: #fff5f5 !important;
+    border: 2px solid #dc3545 !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin: 10px 0 !important;
+    transition: all 0.3s ease;
+}
+
+.o_contact_delete_section:hover {
+    background-color: #ffe6e6 !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+}
+
+.o_contact_delete_section .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.o_contact_delete_section .btn-danger:hover {
+    background-color: #b02a37;
+    border-color: #b02a37;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.o_contact_delete_section .btn-danger:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}
+
+
+

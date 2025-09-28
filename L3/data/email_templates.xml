@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Email template for out of stock notification -->
+        <record id="email_template_product_out_of_stock" model="mail.template">
+            <field name="name">Product Out of Stock Notification</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="subject">⚠️ Товар "{{ object.name }}" закончился на складе</field>
+            <field name="email_from">{{ (object.create_uid.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ user.email }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Уважаемый менеджер,
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Товар <strong>{{ object.name }}</strong> закончился на складе.
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Детали товара:</strong><br/>
+                        • Название: {{ object.name }}<br/>
+                        • Код: {{ object.default_code or 'Не указан' }}<br/>
+                        • Остаток на складе: {{ object.qty_available }}<br/>
+                        • Минимальный остаток: {{ object.reorder_point or 0 }}<br/>
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Рекомендуется пополнить склад или заказать товар у поставщика.
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        С уважением,<br/>
+                        Система управления складом
+                    </p>
+                </div>
+            </field>
+        </record>
+
+        <!-- Email template for low stock notification -->
+        <record id="email_template_product_low_stock" model="mail.template">
+            <field name="name">Product Low Stock Notification</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="subject">📦 Товар "{{ object.name }}" заканчивается на складе</field>
+            <field name="email_from">{{ (object.create_uid.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ user.email }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Уважаемый менеджер,
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Товар <strong>{{ object.name }}</strong> заканчивается на складе.
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Детали товара:</strong><br/>
+                        • Название: {{ object.name }}<br/>
+                        • Код: {{ object.default_code or 'Не указан' }}<br/>
+                        • Остаток на складе: {{ object.qty_available }}<br/>
+                        • Минимальный остаток: {{ object.reorder_point or 0 }}<br/>
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Рекомендуется пополнить склад в ближайшее время.
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        С уважением,<br/>
+                        Система управления складом
+                    </p>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

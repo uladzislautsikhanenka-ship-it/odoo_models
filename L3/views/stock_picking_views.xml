@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add express delivery indicator to stock picking form -->
+    <record id="view_picking_form_express_delivery" model="ir.ui.view">
+        <field name="name">stock.picking.form.express.delivery</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]/h1" position="after">
+                <div class="alert alert-info" role="status" invisible="not is_express_delivery">
+                    <i class="fa fa-rocket" title="Express" aria-hidden="true"></i>
+                    <strong>Express Delivery</strong>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_express_delivery" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add express delivery indicator to stock picking tree -->
+    <record id="view_picking_tree_express_delivery" model="ir.ui.view">
+        <field name="name">stock.picking.tree.express.delivery</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_express_delivery" string="Express" widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add express delivery filter to stock picking search -->
+    <record id="view_picking_search_express_delivery" model="ir.ui.view">
+        <field name="name">stock.picking.search.express.delivery</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <separator/>
+                <filter name="express_delivery" string="Express Delivery" domain="[('is_express_delivery', '=', True)]"/>
+                <filter name="regular_delivery" string="Regular Delivery" domain="[('is_express_delivery', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

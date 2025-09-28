@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit the kanban view in Contacts & Addresses section of company form -->
+    <record id="view_partner_child_ids_kanban_primary" model="ir.ui.view">
+        <field name="name">res.partner.child_ids.kanban.primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add is_primary field to the kanban -->
+            <xpath expr="//field[@name='child_ids']/kanban" position="inside">
+                <field name="is_primary"/>
+                <field name="avatar_128"/>
+                <field name="type"/>
+            </xpath>
+            <!-- Update the kanban card template -->
+            <xpath expr="//field[@name='child_ids']/kanban/templates/t[@t-name='card']" position="inside">
+                <!-- Primary contact toggle switch -->
+                <div class="o_primary_contact_checkbox" style="position: absolute; top: 8px; right: 8px; z-index: 30;">
+                    <button t-if="record.type.raw_value == 'contact'" 
+                            name="action_toggle_primary_kanban" 
+                            type="object" 
+                            class="btn btn-sm o_primary_contact_toggle"
+                            t-att-title="record.is_primary.raw_value ? 'Снять статус основного контакта' : 'Сделать основным контактом'"
+                            style="background-color: #dc3545; border-color: #dc3545; color: white; padding: 4px 8px; border-radius: 4px;">
+                        <i t-if="record.is_primary.raw_value" class="fa fa-star"/>
+                        <i t-if="!record.is_primary.raw_value" class="fa fa-star-o"/>
+                    </button>
+                </div>
+                
+                <!-- Primary contact label -->
+                <div t-if="record.is_primary.raw_value and record.type.raw_value == 'contact'" 
+                     class="o_primary_contact_label" 
+                     style="position: absolute; top: 30px; right: 8px; z-index: 10;">
+                    <span class="badge badge-danger" style="font-size: 0.7rem; padding: 2px 6px;">
+                        Основной контакт
+                    </span>
+                </div>
+                
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit the contacts kanban view in the form -->
+    <record id="view_partner_form_contacts_primary" model="ir.ui.view">
+        <field name="name">res.partner.form.contacts.primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add is_primary field to kanban -->
+            <xpath expr="//field[@name='child_ids']/kanban" position="inside">
+                <field name="is_primary"/>
+                <field name="type"/>
+            </xpath>
+            <!-- Add primary contact indicator to kanban cards -->
+            <xpath expr="//field[@name='child_ids']/kanban/templates/t[@t-name='card']" position="inside">
+                <!-- Primary contact toggle switch -->
+                <div class="o_primary_contact_checkbox" style="position: absolute; top: 8px; right: 8px; z-index: 30;">
+                    <button t-if="record.type.raw_value == 'contact'" 
+                            name="action_toggle_primary_kanban" 
+                            type="object" 
+                            class="btn btn-sm o_primary_contact_toggle"
+                            t-att-title="record.is_primary.raw_value ? 'Снять статус основного контакта' : 'Сделать основным контактом'"
+                            style="background-color: #dc3545; border-color: #dc3545; color: white; padding: 4px 8px; border-radius: 4px;">
+                        <i t-if="record.is_primary.raw_value" class="fa fa-star"/>
+                        <i t-if="!record.is_primary.raw_value" class="fa fa-star-o"/>
+                    </button>
+                </div>
+                
+                <div t-if="record.is_primary.raw_value" class="o_primary_contact_badge">
+                    <span class="badge badge-danger">Primary</span>
+                </div>
+                
+            </xpath>
+            <!-- Add is_primary field to contact form -->
+            <xpath expr="//field[@name='mobile']" position="after">
+                <field name="is_primary" 
+                       string="Основной контакт"
+                       invisible="type != 'contact' or not parent_id"
+                       class="text-danger"
+                       widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit the kanban form for child contacts to add primary contact field -->
+    <record id="view_partner_child_kanban_form_primary" model="ir.ui.view">
+        <field name="name">res.partner.child.kanban.form.primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add is_primary field to the kanban form -->
+            <xpath expr="//field[@name='child_ids']/form/sheet/group/group/field[@name='mobile']" position="after">
+                <field name="is_primary" 
+                       string="⭐ Основной контакт"
+                       invisible="type != 'contact' or not parent_id"
+                       class="o_primary_checkbox_modal"
+                       widget="boolean_toggle"/>
+            </xpath>
+            
+            <!-- Add primary contact section after the main group -->
+            <xpath expr="//field[@name='child_ids']/form/sheet/group" position="after">
+                <group>
+                    <div class="o_primary_contact_modal_section" style="background-color: #f8f9fa; border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 10px 0;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <field name="is_primary" 
+                                   string="⭐ Основной контакт"
+                                   invisible="type != 'contact' or not parent_id"
+                                   class="o_primary_checkbox_modal"
+                                   widget="boolean_toggle"/>
+                            <span style="font-weight: bold; color: #dc3545; font-size: 16px;">
+                                Отметьте этот контакт как основной для компании
+                            </span>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 14px; color: #6c757d;">
+                            Только один контакт может быть основным для каждой компании
+                        </div>
+                    </div>
+                    
+                    <!-- Delete contact button -->
+                    <div class="o_contact_delete_section" style="background-color: #fff5f5; border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 10px 0;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-weight: bold; color: #dc3545; font-size: 16px;">
+                                    🗑️ Удаление контакта
+                                </span>
+                                <div style="margin-top: 4px; font-size: 14px; color: #6c757d;">
+                                    Удалите этот контакт из системы
+                                </div>
+                            </div>
+                            <button name="action_remove_contact" 
+                                    type="object" 
+                                    class="btn btn-danger"
+                                    confirm="Вы уверены, что хотите удалить этот контакт?"
+                                    title="Удалить контакт"
+                                    style="margin-left: 10px;">
+                                <i class="fa fa-trash"/> Удалить контакт
+                            </button>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Menu for Custom Partner Contacts -->
+    <menuitem id="menu_custom_partner_contacts"
+              name="Custom Partner Contacts"
+              parent="contacts.menu_contacts"
+              sequence="10"
+              groups="base.group_user"/>
+
+    <menuitem id="menu_primary_contacts"
+              name="Primary Contacts"
+              parent="menu_custom_partner_contacts"
+              action="base.action_partner_form"
+              sequence="1"
+              groups="base.group_user"/>
+
+    <menuitem id="menu_sale_orders_custom"
+              name="Sales Orders (Custom)"
+              parent="menu_custom_partner_contacts"
+              action="sale.action_orders"
+              sequence="2"
+              groups="base.group_user"/>
+
+</odoo>

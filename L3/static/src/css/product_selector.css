@@ -1,0 +1,64 @@
+/* Styles for product selector with highlighting */
+
+/* Red highlighting for already selected products in dropdown */
+.o_product_already_selected {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    font-weight: bold !important;
+    border-left: 4px solid #c62828 !important;
+    position: relative !important;
+    padding-left: 8px !important;
+}
+
+.o_product_already_selected:hover {
+    background-color: #ffcdd2 !important;
+    cursor: not-allowed !important;
+}
+
+/* Style for dropdown items */
+.o_field_many2one_dropdown_option,
+.o_dropdown_item,
+.dropdown-item,
+[role="option"] {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.o_field_many2one_dropdown_option:hover,
+.o_dropdown_item:hover,
+.dropdown-item:hover,
+[role="option"]:hover {
+    background-color: #f5f5f5;
+}
+
+/* Disabled state for already selected products */
+.o_product_already_selected {
+    opacity: 0.8 !important;
+    cursor: not-allowed !important;
+}
+
+.o_product_already_selected:hover {
+    cursor: not-allowed !important;
+    background-color: #ffcdd2 !important;
+}
+
+/* Warning text styling */
+.o_product_already_selected .warning-text {
+    float: right !important;
+    color: #c62828 !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    margin-right: 10px !important;
+}
+
+/* Override any Odoo styles */
+.o_field_many2one_dropdown .o_product_already_selected,
+.o_dropdown_item.o_product_already_selected,
+.dropdown-item.o_product_already_selected,
+[role="option"].o_product_already_selected {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    font-weight: bold !important;
+    border-left: 4px solid #c62828 !important;
+    padding-left: 8px !important;
+}

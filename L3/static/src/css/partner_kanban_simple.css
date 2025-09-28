@@ -1,0 +1,320 @@
+/* Simple Primary Contact Checkbox Styling */
+
+.o_primary_contact_checkbox {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+/* Styling for standard boolean_toggle widget */
+.o_primary_contact_checkbox .o_boolean_toggle {
+    background-color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+    min-width: 20px;
+    min-height: 20px;
+    display: inline-block;
+}
+
+.o_primary_contact_checkbox .o_boolean_toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* When toggle is active (true) */
+.o_primary_contact_checkbox .o_boolean_toggle.o_toggle_active {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+/* When toggle is inactive (false) */
+.o_primary_contact_checkbox .o_boolean_toggle:not(.o_toggle_active) {
+    background-color: white;
+    border-color: #dc3545;
+}
+
+/* Toggle button inside */
+.o_primary_contact_checkbox .o_boolean_toggle .o_toggle_button {
+    background-color: white;
+    border: 1px solid #dc3545;
+    border-radius: 2px;
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+    transition: all 0.2s ease;
+}
+
+/* When active, button moves to right */
+.o_primary_contact_checkbox .o_boolean_toggle.o_toggle_active .o_toggle_button {
+    background-color: #dc3545;
+    border-color: white;
+    transform: translateX(0);
+}
+
+/* When inactive, button stays on left */
+.o_primary_contact_checkbox .o_boolean_toggle:not(.o_toggle_active) .o_toggle_button {
+    transform: translateX(0);
+}
+
+/* Primary contact label */
+.o_primary_contact_label {
+    position: absolute;
+    top: 30px;
+    right: 8px;
+    z-index: 10;
+}
+
+.o_primary_contact_label .badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Kanban card styling */
+.o_kanban_record {
+    position: relative;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    background: white;
+    min-height: 120px;
+}
+
+.o_kanban_record:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* Make sure checkbox is visible */
+.o_kanban_record .o_primary_contact_checkbox {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1000;
+    pointer-events: auto;
+}
+
+.o_kanban_record .o_primary_checkbox {
+    pointer-events: auto;
+    z-index: 1001;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #dc3545;
+}
+
+/* Styling for regular checkbox input */
+.o_primary_contact_checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #dc3545;
+    transform: scale(1.2);
+}
+
+.o_primary_contact_checkbox input[type="checkbox"]:hover {
+    transform: scale(1.3);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Header checkbox styling */
+.o_primary_contact_header_toggle {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.o_primary_contact_header_toggle .o_boolean_toggle {
+    background-color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+    min-width: 20px;
+    min-height: 20px;
+    display: inline-block;
+}
+
+.o_primary_contact_header_toggle .o_boolean_toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* When toggle is active (true) */
+.o_primary_contact_header_toggle .o_boolean_toggle.o_toggle_active {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+/* When toggle is inactive (false) */
+.o_primary_contact_header_toggle .o_boolean_toggle:not(.o_toggle_active) {
+    background-color: white;
+    border-color: #dc3545;
+}
+
+/* Toggle button inside */
+.o_primary_contact_header_toggle .o_boolean_toggle .o_toggle_button {
+    background-color: white;
+    border: 1px solid #dc3545;
+    border-radius: 2px;
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+    transition: all 0.2s ease;
+}
+
+/* When active, button moves to right */
+.o_primary_contact_header_toggle .o_boolean_toggle.o_toggle_active .o_toggle_button {
+    background-color: #dc3545;
+    border-color: white;
+    transform: translateX(0);
+}
+
+/* When inactive, button stays on left */
+.o_primary_contact_header_toggle .o_boolean_toggle:not(.o_toggle_active) .o_toggle_button {
+    transform: translateX(0);
+}
+
+/* Modal window primary contact styling */
+.o_primary_contact_modal_section {
+    background-color: #f8f9fa !important;
+    border: 2px solid #dc3545 !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin: 10px 0 !important;
+    transition: all 0.3s ease;
+}
+
+.o_primary_contact_modal_section:hover {
+    background-color: #fff5f5 !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+}
+
+.o_primary_contact_modal_section .o_boolean_toggle {
+    background-color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+    min-width: 24px;
+    min-height: 24px;
+    display: inline-block;
+    transform: scale(1.2);
+}
+
+.o_primary_contact_modal_section .o_boolean_toggle:hover {
+    transform: scale(1.3);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* When toggle is active (true) */
+.o_primary_contact_modal_section .o_boolean_toggle.o_toggle_active {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+/* When toggle is inactive (false) */
+.o_primary_contact_modal_section .o_boolean_toggle:not(.o_toggle_active) {
+    background-color: white;
+    border-color: #dc3545;
+}
+
+/* Toggle button inside */
+.o_primary_contact_modal_section .o_boolean_toggle .o_toggle_button {
+    background-color: white;
+    border: 1px solid #dc3545;
+    border-radius: 2px;
+    width: 18px;
+    height: 18px;
+    margin: 1px;
+    transition: all 0.2s ease;
+}
+
+/* When active, button moves to right */
+.o_primary_contact_modal_section .o_boolean_toggle.o_toggle_active .o_toggle_button {
+    background-color: #dc3545;
+    border-color: white;
+    transform: translateX(0);
+}
+
+/* When inactive, button stays on left */
+.o_primary_contact_modal_section .o_boolean_toggle:not(.o_toggle_active) .o_toggle_button {
+    transform: translateX(0);
+}
+
+/* Header toggle styling improvements */
+.o_primary_contact_header_toggle {
+    background-color: #f8f9fa !important;
+    border: 1px solid #dc3545 !important;
+    border-radius: 6px !important;
+    padding: 8px !important;
+    transition: all 0.3s ease;
+}
+
+.o_primary_contact_header_toggle:hover {
+    background-color: #fff5f5 !important;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+}
+
+.o_primary_contact_header_toggle .o_boolean_toggle {
+    background-color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+    min-width: 20px;
+    min-height: 20px;
+    display: inline-block;
+}
+
+.o_primary_contact_header_toggle .o_boolean_toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Sync both toggles visually in modal */
+.o_primary_contact_modal_section .o_boolean_toggle {
+    background-color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+    min-width: 24px;
+    min-height: 24px;
+    display: inline-block;
+    transform: scale(1.1);
+}
+
+.o_primary_contact_modal_section .o_boolean_toggle:hover {
+    transform: scale(1.2);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Primary contact field styling in modal */
+.o_modal .field_is_primary,
+.modal .field_is_primary,
+.o_dialog .field_is_primary {
+    margin: 5px 0;
+}

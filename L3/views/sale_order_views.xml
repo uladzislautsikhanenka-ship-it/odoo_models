@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add express flag column and keep native confirm buttons -->
+    <record id="view_order_form_express_delivery" model="ir.ui.view">
+        <field name="name">sale.order.form.express.delivery</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем умную кнопку Delivery в шапку -->
+            <xpath expr="//header" position="inside">
+                <button name="action_view_delivery_custom" type="object" class="oe_stat_button" invisible="['|', ('state', 'in', ('draft','sent')), ('delivery_count', '=', 0)]">
+                    <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                </button>
+            </xpath>
+            <!-- Add express column to the one2many list of order lines -->
+            <xpath expr="//field[@name='order_line']//list/field[@name='name']" position="after">
+                <field name="express_delivery" string="Express" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Наследование представления заказа для ограничения выбора продуктов -->
+    <record id="view_order_form_inherit_restrict_products" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.restrict.products</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем скрытое поле для домена -->
+            <xpath expr="//field[@name='product_template_id']" position="before">
+                <field name="available_product_domain" invisible="1"/>
+            </xpath>
+            
+            <!-- Настраиваем product_template_id для обновления домена -->
+            <xpath expr="//field[@name='product_template_id']" position="attributes">
+                <attribute name="context">{'default_order_id': parent.id, 'active_model': 'sale.order.line', 'active_id': id, 'line_id': id}</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+                <attribute name="domain">[('id', 'not in', parent.used_product_template_ids)]</attribute>
+            </xpath>
+            
+               <!-- Добавляем кнопки для проверки статуса продуктов -->
+               <xpath expr="//header" position="inside">
+                   <button name="action_get_products_status" type="object" class="oe_stat_button" string="Products Status" help="Check selected and available products"/>
+                   <button name="action_test_highlight" type="object" class="oe_stat_button" string="Test Highlight" help="Test product highlighting"/>
+               </xpath>
+        </field>
+    </record>
+</odoo>
