@@ -15,6 +15,7 @@
             <!-- Add express column to the one2many list of order lines -->
             <xpath expr="//field[@name='order_line']//list/field[@name='name']" position="after">
                 <field name="express_delivery" string="Express" optional="show"/>
+                <field name="express_picking_name" string="Express Picking" optional="show" readonly="1"/>
             </xpath>
         </field>
     </record>
@@ -44,4 +45,47 @@
                </xpath>
         </field>
     </record>
+
+    <!-- Добавляем кнопку "My button" в header -->
+    <record id="view_order_form_inherit_print_button" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.print.button</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем кнопку в header как smart button -->
+            <xpath expr="//header" position="inside">
+                <button name="%(action_report_invoice_payment)d" 
+                        type="action" 
+                        class="oe_stat_button" 
+                        string="My button"
+                        help="Счет на оплату">
+                    <i class="fa fa-file-text-o" role="img" aria-label="Print" title="Print"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Расширение печатной формы Sale Order для добавления колонок Express Delivery и Express Picking -->
+    <template id="report_saleorder_document_inherit_express" inherit_id="sale.report_saleorder_document">
+        <!-- Добавляем колонки в заголовок таблицы после колонки Description -->
+        <xpath expr="//th[@name='th_description']" position="after">
+            <th name="th_express_delivery" class="text-center">
+                <span>Express</span>
+            </th>
+            <th name="th_express_picking" class="text-start">
+                <span>Express Picking</span>
+            </th>
+        </xpath>
+        
+        <!-- Добавляем ячейки в тело таблицы после названия продукта -->
+        <xpath expr="//td[@name='td_name']" position="after">
+            <td name="td_express_delivery" class="text-center">
+                <span t-if="line.express_delivery">✓</span>
+                <span t-if="not line.express_delivery">—</span>
+            </td>
+            <td name="td_express_picking" class="text-start">
+                <span t-if="line.express_picking_name" t-field="line.express_picking_name"/>
+            </td>
+        </xpath>
+    </template>
 </odoo>

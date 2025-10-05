@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Скрываем стандартный отчет Quotation / Order, чтобы оставить только PDF Quote -->
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <!-- Отчет "Счет на оплату" (первая кнопка - используем специальный символ для сортировки) -->
+    <record id="action_report_invoice_payment" model="ir.actions.report">
+        <field name="name">Счет на оплату</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">L3.invoice_payment_template</field>
+        <field name="report_file">L3.invoice_payment_template</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Счет на оплату - %s' % (object.name)</field>
+    </record>
+
+    <!-- Шаблон отчета "Счет на оплату" -->
+    <template id="invoice_payment_template">
+        <style>
+            .bank_info { font-size: 12px; line-height: 1.4; }
+            .bank_name { font-weight: bold; margin-bottom: 5px; }
+            .bank_label { margin-bottom: 10px; }
+            .supplier_info div { margin-bottom: 2px; }
+            .bank_details div { margin-bottom: 5px; }
+            .table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            .table th, .table td { border: 1px solid #000; padding: 8px; text-align: left; }
+            .table th { background-color: #f5f5f5; font-weight: bold; }
+            .text-center { text-align: center; }
+            .text-right { text-align: right; }
+            .mt-4 { margin-top: 1.5rem; }
+            .mb-4 { margin-bottom: 1.5rem; }
+        </style>
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <main>
+                        <!-- Заголовок документа -->
+                        <div class="row">
+                            <div class="col-6">
+                                <!-- Информация о банке и поставщике -->
+                                <div class="bank_info">
+                                    <div class="bank_name">
+                                        <strong>ПАО "Сбербанк"</strong>
+                                    </div>
+                                    <div class="bank_label">Банк получателя</div>
+                                    <div class="supplier_info">
+                                        <div><strong>ИНН</strong> <t t-esc="doc.company_id.vat or '789654'"/></div>
+                                        <div><strong>КПП</strong> 789654</div>
+                                        <div><strong><t t-esc="doc.company_id.name or 'РФ Компания'"/></strong></div>
+                                        <div>Получатель</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 text-right">
+                                <!-- Банковские реквизиты -->
+                                <div class="bank_details">
+                                    <div><strong>БИК</strong> <t t-esc="doc.company_id.bank_ids[:1].bank_bic or '044525225'"/></div>
+                                    <div><strong>Сч. №</strong> <t t-esc="doc.company_id.bank_ids[:1].acc_number or '123412341234000'"/></div>
+                                    <div><strong>Кор. Сч. №</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Название документа -->
+                        <div class="text-center mt-4 mb-4">
+                            <h2><strong>Счёт на оплату № <t t-esc="doc.name"/> от <span t-field="doc.date_order" t-options='{"format": "dd.MM.yyyy"}'/></strong></h2>
+                        </div>
+
+                        <!-- Информация о сторонах -->
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="text-center"><strong>Поставщик</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <t t-esc="doc.company_id.name or 'РФ Компания'"/>, 
+                                            ИНН <t t-esc="doc.company_id.vat or '789654'"/>, 
+                                            КПП 789654, 
+                                            АДРЕС: <t t-esc="doc.company_id.street or ''"/><t t-if="doc.company_id.street">, </t>
+                                            <t t-esc="doc.company_id.city or 'Российская Федерация'"/><t t-if="doc.company_id.city and doc.company_id.zip"> </t>
+                                            <t t-esc="doc.company_id.zip or ''"/><t t-if="doc.company_id.phone">, 
+                                            тел.: <t t-esc="doc.company_id.phone"/></t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="text-center"><strong>Покупатель</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <t t-esc="doc.partner_id.name or 'Покупатель'"/><t t-if="doc.partner_id.vat">, 
+                                            ИНН <t t-esc="doc.partner_id.vat"/></t><t t-if="doc.partner_id.street">, 
+                                            АДРЕС: <t t-esc="doc.partner_id.street"/></t><t t-if="doc.partner_id.city">, 
+                                            <t t-esc="doc.partner_id.city"/></t><t t-if="doc.partner_id.zip"> <t t-esc="doc.partner_id.zip"/></t><t t-if="doc.partner_id.phone">, 
+                                            тел.: <t t-esc="doc.partner_id.phone"/></t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Таблица товаров -->
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">№</th>
+                                    <th class="text-center">Товары (работы, услуги)</th>
+                                    <th class="text-center">Кол-во</th>
+                                    <th class="text-center">Ед.изм.</th>
+                                    <th class="text-center">Цена, руб</th>
+                                    <th class="text-center">НДС</th>
+                                    <th class="text-center">Сумма, руб</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.order_line" t-as="line" t-as-index="line_index">
+                                    <tr t-if="line.product_id">
+                                        <td class="text-center"><t t-esc="line_index + 1"/></td>
+                                        <td><t t-esc="line.name"/></td>
+                                        <td class="text-center"><t t-esc="line.product_uom_qty"/></td>
+                                        <td class="text-center">
+                                            <t t-esc="line.product_uom.name if line.product_uom else 'Шт.'"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="'{:,.2f}'.format(line.price_unit).replace(',', ' ')"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <t t-if="line.tax_id and any(tax.amount > 0 for tax in line.tax_id)">
+                                                <t t-esc="', '.join([str(int(tax.amount)) + '%' for tax in line.tax_id if tax.amount > 0])"/>
+                                            </t>
+                                            <t t-else="">Без НДС</t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="'{:,.2f}'.format(line.price_subtotal).replace(',', ' ')"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Итоги -->
+                        <div class="row mt-4">
+                            <div class="col-6"></div>
+                            <div class="col-6">
+                                <table class="table">
+                                    <tr>
+                                        <td class="text-right"><strong>Итого:</strong></td>
+                                        <td class="text-right"><strong><t t-esc="'{:,.2f}'.format(doc.amount_untaxed).replace(',', ' ')"/> руб.</strong></td>
+                                    </tr>
+                                    <tr t-if="doc.amount_tax > 0">
+                                        <td class="text-right"><strong>Сумма НДС:</strong></td>
+                                        <td class="text-right"><strong><t t-esc="'{:,.2f}'.format(doc.amount_tax).replace(',', ' ')"/> руб.</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right"><strong>Всего к оплате:</strong></td>
+                                        <td class="text-right"><strong><t t-esc="'{:,.2f}'.format(doc.amount_total).replace(',', ' ')"/> руб.</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Отчет "PDF Quote" (вторая кнопка) -->
+    <record id="action_report_pdf_quote" model="ir.actions.report">
+        <field name="name">PDF Quote</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">L3.pdf_quote_template</field>
+        <field name="report_file">L3.pdf_quote_template</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'PDF Quote - %s' % (object.name)</field>
+    </record>
+
+    <!-- Шаблон отчета "PDF Quote" -->
+    <template id="pdf_quote_template">
+        <style>
+            .header { text-align: center; margin-bottom: 20px; }
+            .company-info { margin-bottom: 20px; }
+            .customer-info { margin-bottom: 20px; }
+            .table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            .table th, .table td { border: 1px solid #000; padding: 8px; text-align: left; }
+            .table th { background-color: #f5f5f5; font-weight: bold; }
+            .text-center { text-align: center; }
+            .text-right { text-align: right; }
+            .mt-4 { margin-top: 1.5rem; }
+            .mb-4 { margin-bottom: 1.5rem; }
+        </style>
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <main>
+                        <!-- Заголовок документа -->
+                        <div class="header">
+                            <h2><strong>КВОТАЦИЯ / ЗАКАЗ № <t t-esc="doc.name"/></strong></h2>
+                            <p>Дата: <span t-field="doc.date_order" t-options='{"format": "dd.MM.yyyy"}'/></p>
+                        </div>
+
+                        <!-- Информация о компании -->
+                        <div class="company-info">
+                            <h3>Поставщик:</h3>
+                            <p><strong><t t-esc="doc.company_id.name or 'Компания'"/></strong></p>
+                            <p t-if="doc.company_id.street">
+                                <t t-esc="doc.company_id.street"/><t t-if="doc.company_id.city">, <t t-esc="doc.company_id.city"/></t>
+                                <t t-if="doc.company_id.zip"> <t t-esc="doc.company_id.zip"/></t>
+                            </p>
+                            <p t-if="doc.company_id.phone">Тел.: <t t-esc="doc.company_id.phone"/></p>
+                            <p t-if="doc.company_id.email">Email: <t t-esc="doc.company_id.email"/></p>
+                        </div>
+
+                        <!-- Информация о клиенте -->
+                        <div class="customer-info">
+                            <h3>Клиент:</h3>
+                            <p><strong><t t-esc="doc.partner_id.name or 'Клиент'"/></strong></p>
+                            <p t-if="doc.partner_id.street">
+                                <t t-esc="doc.partner_id.street"/><t t-if="doc.partner_id.city">, <t t-esc="doc.partner_id.city"/></t>
+                                <t t-if="doc.partner_id.zip"> <t t-esc="doc.partner_id.zip"/></t>
+                            </p>
+                            <p t-if="doc.partner_id.phone">Тел.: <t t-esc="doc.partner_id.phone"/></p>
+                            <p t-if="doc.partner_id.email">Email: <t t-esc="doc.partner_id.email"/></p>
+                        </div>
+
+                        <!-- Таблица товаров -->
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">№</th>
+                                    <th>Описание</th>
+                                    <th class="text-center">Кол-во</th>
+                                    <th class="text-center">Ед.</th>
+                                    <th class="text-right">Цена</th>
+                                    <th class="text-right">Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.order_line" t-as="line" t-as-index="line_index">
+                                    <tr t-if="line.product_id">
+                                        <td class="text-center"><t t-esc="line_index + 1"/></td>
+                                        <td><t t-esc="line.name"/></td>
+                                        <td class="text-center"><t t-esc="line.product_uom_qty"/></td>
+                                        <td class="text-center">
+                                            <t t-esc="line.product_uom.name if line.product_uom else 'шт.'"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="'{:,.2f}'.format(line.price_unit).replace(',', ' ')"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="'{:,.2f}'.format(line.price_subtotal).replace(',', ' ')"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Итоги -->
+                        <div class="row mt-4">
+                            <div class="col-6"></div>
+                            <div class="col-6">
+                                <table class="table">
+                                    <tr>
+                                        <td class="text-right"><strong>Подытог:</strong></td>
+                                        <td class="text-right"><strong><t t-esc="'{:,.2f}'.format(doc.amount_untaxed).replace(',', ' ')"/></strong></td>
+                                    </tr>
+                                    <tr t-if="doc.amount_tax > 0">
+                                        <td class="text-right"><strong>НДС:</strong></td>
+                                        <td class="text-right"><strong><t t-esc="'{:,.2f}'.format(doc.amount_tax).replace(',', ' ')"/></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right"><strong>Итого:</strong></td>
+                                        <td class="text-right"><strong><t t-esc="'{:,.2f}'.format(doc.amount_total).replace(',', ' ')"/></strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Примечания -->
+                        <div class="mt-4" t-if="doc.note">
+                            <h4>Примечания:</h4>
+                            <p t-raw="doc.note"/>
+                        </div>
+                    </main>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

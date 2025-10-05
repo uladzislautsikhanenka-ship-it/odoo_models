@@ -34,8 +34,10 @@
         'sale_stock',
         'stock',
         'mail',
+        'sale_pdf_quote_builder',
     ],
     'data': [
+        'reports/invoice_payment_report.xml',
         'security/ir.model.access.csv',
         'data/email_templates.xml',
         'views/res_partner_views.xml',
@@ -48,9 +50,9 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'custom_partner_contacts/static/src/css/partner_kanban.css',
-            'custom_partner_contacts/static/src/css/partner_kanban_simple.css',
-            'custom_partner_contacts/static/src/css/product_selector.css',
+            'L3/static/src/css/partner_kanban.css',
+            'L3/static/src/css/partner_kanban_simple.css',
+            'L3/static/src/css/product_selector.css',
         ],
     },
     'installable': True,
