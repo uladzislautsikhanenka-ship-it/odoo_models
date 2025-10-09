@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Форма wizard для разделения линий заказа -->
+    <record id="view_split_order_lines_wizard_form" model="ir.ui.view">
+        <field name="name">split.order.lines.wizard.form</field>
+        <field name="model">split.order.lines.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Разделить линии заказа">
+                <group>
+                    <field name="sale_order_id" readonly="1"/>
+                </group>
+                
+                <notebook>
+                    <page string="Линии для разделения">
+                        <group>
+                            <div class="alert alert-info">
+                                <strong>Инструкция:</strong>
+                                <ul>
+                                    <li>Укажите количество разделений в колонке "Количество разделений"</li>
+                                    <li>Количество должно делить исходное количество без остатка</li>
+                                    <li>Например: 9 товаров можно разделить на 3 или 9 частей (но не на 4)</li>
+                                    <li>Количества будут автоматически распределены равномерно, или вы можете указать их вручную через запятую</li>
+                                </ul>
+                            </div>
+                        </group>
+                        
+                        <field name="line_ids"/>
+                    </page>
+                </notebook>
+                
+                <footer>
+                    <button name="action_split_lines" type="object" string="Разделить линии" class="btn-primary"/>
+                    <button string="Отмена" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- List view для строк wizard -->
+    <record id="view_split_order_lines_wizard_line_list" model="ir.ui.view">
+        <field name="name">split.order.lines.wizard.line.list</field>
+        <field name="model">split.order.lines.wizard.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="product_name" string="Продукт" readonly="1"/>
+                <field name="original_quantity" string="Исходное количество" readonly="1"/>
+                <field name="number_of_splits" string="Количество разделений" required="1"/>
+                <field name="split_quantities" string="Количества для разделения"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Действие для открытия wizard -->
+    <record id="action_split_order_lines_wizard" model="ir.actions.act_window">
+        <field name="name">Разделить линии заказа</field>
+        <field name="res_model">split.order.lines.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'active_model': 'sale.order', 'active_ids': context.get('active_ids', [])}</field>
+    </record>
+</odoo>

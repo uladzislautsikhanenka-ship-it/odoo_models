@@ -1,10 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+    
+    # Переопределяем поле partner_id для изменения строкового представления
+    partner_id = fields.Many2one(
+        'res.partner', 
+        string='Partner',
+        required=True, 
+        change_default=True, 
+        index=True, 
+        tracking=1,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+    )
 
     @api.model
     def _get_excluded_product_template_ids(self, order_id=None, exclude_line_id=None):
@@ -35,6 +47,85 @@ class SaleOrder(models.Model):
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
         return domain
+
+    def action_split_order_lines(self):
+        """Открывает wizard для разделения выбранных линий заказа"""
+        self.ensure_one()
+        
+        import logging
+        _logger = logging.getLogger(__name__)
+        
+        # Принудительно сохраняем изменения в базе данных
+        self.env.flush_all()
+        
+        # Получаем все линии заказа и логируем их состояние
+        all_lines = self.order_line
+        _logger.info(f"Order {self.name}: total lines = {len(all_lines)}")
+        
+        for line in all_lines:
+            _logger.info(f"Line {line.id}: product={line.product_template_id.name if line.product_template_id else 'No product'}, split_line={line.split_line}")
+        
+        # Получаем линии, отмеченные для разделения
+        lines_to_split = self.order_line.filtered('split_line')
+        _logger.info(f"Order {self.name}: found {len(lines_to_split)} lines with split_line=True")
+        
+        if not lines_to_split:
+            raise ValidationError(_('Не выбраны линии для разделения. Отметьте линии флажком Split.'))
+        
+        # Создаем wizard напрямую с выбранными линиями
+        wizard_vals = {
+            'sale_order_id': self.id,
+        }
+        
+        wizard = self.env['split.order.lines.wizard'].create(wizard_vals)
+        
+        # Создаем линии wizard
+        for line in lines_to_split:
+            line_vals = {
+                'wizard_id': wizard.id,
+                'order_line_id': line.id,
+            }
+            self.env['split.order.lines.wizard.line'].create(line_vals)
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Разделить линии заказа'),
+            'res_model': 'split.order.lines.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': wizard.id,
+        }
+    
+    def action_split_selected_lines(self):
+        """Алиас для action_split_order_lines (для совместимости со старыми представлениями)"""
+        return self.action_split_order_lines()
+    
+    def action_clear_split_flags(self):
+        """Очищает все флажки Split в линиях заказа"""
+        self.ensure_one()
+        self.order_line.write({'split_line': False})
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+    
+    def action_debug_split_flags(self):
+        """Отладочный метод для проверки флажков Split"""
+        self.ensure_one()
+        split_lines = self.order_line.filtered('split_line')
+        
+        import logging
+        _logger = logging.getLogger(__name__)
+        _logger.info(f"Debug: Order {self.name} has {len(split_lines)} lines with split_line=True")
+        for line in split_lines:
+            _logger.info(f"Debug: Line {line.id} - {line.product_template_id.name if line.product_template_id else 'No product'} - split_line={line.split_line}")
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Debug Split Flags',
+                'message': f'Found {len(split_lines)} lines with split_line=True',
+                'type': 'info',
+            }
+        }
 
 
 class SaleOrderLine(models.Model):
@@ -81,23 +172,29 @@ class SaleOrderLine(models.Model):
         lines = super().create(vals_list)
         for line in lines:
             if line.product_template_id and line.order_id:
-                excluded_ids = line.order_id._get_excluded_product_template_ids(line.order_id.id, line.id)
-                if line.product_template_id.id in excluded_ids:
-                    raise models.ValidationError(
-                        'Product Template "%s" is already selected in another line of this order.' % 
-                        line.product_template_id.name
-                    )
+                # Проверяем, не создается ли линия в процессе разделения
+                is_split_operation = self.env.context.get('split_operation', False)
+                if not is_split_operation:
+                    excluded_ids = line.order_id._get_excluded_product_template_ids(line.order_id.id, line.id)
+                    if line.product_template_id.id in excluded_ids:
+                        raise models.ValidationError(
+                            'Product Template "%s" is already selected in another line of this order.' % 
+                            line.product_template_id.name
+                        )
         return lines
 
     def write(self, vals):
         if 'product_template_id' in vals and vals['product_template_id']:
-            for line in self:
-                if line.order_id:
-                    excluded_ids = line.order_id._get_excluded_product_template_ids(line.order_id.id, line.id)
-                    if vals['product_template_id'] in excluded_ids:
-                        product_template = self.env['product.template'].browse(vals['product_template_id'])
-                        raise models.ValidationError(
-                            'Product Template "%s" is already selected in another line of this order.' % 
-                            product_template.name
-                        )
+            # Проверяем, не выполняется ли операция разделения
+            is_split_operation = self.env.context.get('split_operation', False)
+            if not is_split_operation:
+                for line in self:
+                    if line.order_id:
+                        excluded_ids = line.order_id._get_excluded_product_template_ids(line.order_id.id, line.id)
+                        if vals['product_template_id'] in excluded_ids:
+                            product_template = self.env['product.template'].browse(vals['product_template_id'])
+                            raise models.ValidationError(
+                                'Product Template "%s" is already selected in another line of this order.' % 
+                                product_template.name
+                            )
         return super().write(vals)

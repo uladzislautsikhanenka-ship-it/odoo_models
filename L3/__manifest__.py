@@ -3,10 +3,10 @@
     'name': 'L3',
     'version': '18.0.1.0.0',
     'category': 'Sales',
-    'summary': 'Add primary contact functionality, improve sale order product selection, and express delivery',
+    'summary': 'Add primary contact functionality, improve sale order product selection, express delivery, and split order lines',
     'description': """
-        Custom Partner Contacts
-        =======================
+        Custom Partner Contacts and Sale Order Enhancements
+        ==================================================
         
         This module adds the following features:
         
@@ -24,6 +24,12 @@
            - Add express_delivery field to sale.order.line
            - Create separate deliveries for standard and express items
            - Automatic delivery separation on order confirmation
+        
+        4. Sale Order Lines Split Functionality:
+           - Dynamic splitting of sale order lines
+           - Custom quantity distribution for split lines
+           - Wizard interface for easy line splitting
+           - Validation of split quantities
     """,
     'author': 'Custom Development',
     'website': '',
@@ -38,8 +44,9 @@
     ],
     'data': [
         'reports/invoice_payment_report.xml',
-        'security/ir.model.access.csv',
+        'security/ir.model.access.xml',
         'data/email_templates.xml',
+        'wizard/split_order_lines_wizard_views.xml',
         'views/res_partner_views.xml',
         'views/sale_order_views.xml',
         'views/stock_picking_views.xml',

@@ -14,6 +14,7 @@
             </xpath>
             <!-- Add express column to the one2many list of order lines -->
             <xpath expr="//field[@name='order_line']//list/field[@name='name']" position="after">
+                <field name="split_line" widget="boolean_toggle" string="Split" optional="show"/>
                 <field name="express_delivery" string="Express" optional="show"/>
                 <field name="express_picking_name" string="Express Picking" optional="show" readonly="1"/>
             </xpath>
@@ -88,4 +89,99 @@
             </td>
         </xpath>
     </template>
+
+    <!-- Добавляем кнопку Split в header заказа -->
+    <record id="view_order_form_inherit_split_button" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.split.button</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем кнопку Split в header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_split_order_lines" 
+                        type="object" 
+                        class="btn-primary" 
+                        string="Split"
+                        help="Разделить выбранные линии заказа"
+                        invisible="state in ['cancel', 'done']"/>
+                <button name="action_clear_split_flags" 
+                        type="object" 
+                        class="btn-secondary" 
+                        string="Clear Split"
+                        help="Очистить все флажки Split"
+                        invisible="state in ['cancel', 'done']"/>
+                <button name="action_debug_split_flags" 
+                        type="object" 
+                        class="btn-secondary" 
+                        string="Debug Split"
+                        help="Отладочная информация о флажках Split"
+                        invisible="state in ['cancel', 'done']"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Добавляем кнопку Split для линий заказа в tree view -->
+    <record id="view_order_line_tree_inherit_split" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.inherit.split</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем колонку Split -->
+            <xpath expr="//field[@name='product_uom_qty']" position="after">
+                <field name="split_line" widget="boolean_toggle" string="Split" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Наследование tree view для изменения заголовка Customer на Partner -->
+    <record id="view_quotation_tree_inherit_customer_to_partner" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.customer.to.partner</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <!-- Изменяем заголовок столбца Customer на Partner -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Partner</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Наследование form view для изменения заголовка Customer на Partner -->
+    <record id="view_quotation_form_inherit_customer_to_partner" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.customer.to.partner</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Изменяем заголовок поля Customer на Partner в форме -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Partner</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Наследование search view для изменения заголовка Customer на Partner -->
+    <record id="view_quotation_search_inherit_customer_to_partner" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.customer.to.partner</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <!-- Изменяем заголовок поля Customer на Partner в поиске -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Partner</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Дополнительное наследование для tree view quotations -->
+    <record id="view_sale_order_tree_inherit_customer_to_partner" model="ir.ui.view">
+        <field name="name">sale.order.tree.quotations.inherit.customer.to.partner</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <!-- Изменяем заголовок столбца Customer на Partner в quotations tree -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Partner</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>
