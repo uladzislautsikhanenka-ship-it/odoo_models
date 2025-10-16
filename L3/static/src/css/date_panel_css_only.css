@@ -1,0 +1,176 @@
+/* Панель даты через CSS псевдоэлементы - БЕЗ JAVASCRIPT */
+
+/* Добавляем панель даты в верхнюю панель через CSS */
+.o_main_navbar::after {
+    content: var(--date-text, "📅 15 янв 2025, 14:30"); /* Динамическая дата через CSS переменную */
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    text-align: center;
+    min-width: 140px;
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+/* Эффект при наведении */
+.o_main_navbar::after:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Новый явный блок рядом с кнопкой Активности в панели управления */
+.o_control_panel .o_cp_switch_buttons .custom-date-panel-cp {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    margin-left: 6px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.2);
+    white-space: nowrap;
+}
+
+.o_control_panel .o_cp_switch_buttons .custom-date-panel-cp:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Альтернативный способ - через системный трей */
+.o_mail_systray::before {
+    content: var(--date-text, "📅 15 янв 2025, 14:30");
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    text-align: center;
+    min-width: 140px;
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.o_mail_systray::before:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Еще один способ - через правую часть навбара */
+.o_navbar_right::before {
+    content: var(--date-text, "📅 15 янв 2025, 14:30");
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    text-align: center;
+    min-width: 140px;
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.o_navbar_right::before:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Адаптивность для разных размеров экрана */
+@media (max-width: 1200px) {
+    .o_main_navbar::after,
+    .o_mail_systray::before,
+    .o_navbar_right::before {
+        font-size: 12px;
+        padding: 6px 10px;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .o_main_navbar::after,
+    .o_mail_systray::before,
+    .o_navbar_right::before {
+        font-size: 11px;
+        padding: 4px 8px;
+        min-width: 100px;
+        margin: 0 4px;
+    }
+}
+
+/* Скрываем на очень маленьких экранах */
+@media (max-width: 480px) {
+    .o_main_navbar::after,
+    .o_mail_systray::before,
+    .o_navbar_right::before {
+        display: none;
+    }
+}
+
+/* Поддержка темной темы Odoo */
+.o_dark .o_main_navbar::after,
+.o_dark .o_mail_systray::before,
+.o_dark .o_navbar_right::before {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    border-color: rgba(255,255,255,0.1);
+}
+
+.o_dark .o_main_navbar::after:hover,
+.o_dark .o_mail_systray::before:hover,
+.o_dark .o_navbar_right::before:hover {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+}
+
+/* Анимация появления */
+@keyframes datePanelSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.o_main_navbar::after,
+.o_mail_systray::before,
+.o_navbar_right::before {
+    animation: datePanelSlideIn 0.5s ease-out;
+}
+
+/* Эффект свечения при наведении */
+.o_main_navbar::after:hover,
+.o_mail_systray::before:hover,
+.o_navbar_right::before:hover {
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}

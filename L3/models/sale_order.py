@@ -11,12 +11,25 @@ class SaleOrder(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 
         string='Partner',
-        required=True, 
+        required=False,  # Убираем required=True чтобы не было красной подсветки
         change_default=True, 
         index=True, 
         tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
     )
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        """Автоматически заполняем адреса при выборе партнера"""
+        if self.partner_id:
+            # Автоматически заполняем адреса
+            self.partner_invoice_id = self.partner_id
+            self.partner_shipping_id = self.partner_id
+        else:
+            # Очищаем адреса если партнер не выбран
+            self.partner_invoice_id = False
+            self.partner_shipping_id = False
+        return super()._onchange_partner_id() if hasattr(super(), '_onchange_partner_id') else {}
 
     @api.model
     def _get_excluded_product_template_ids(self, order_id=None, exclude_line_id=None):
@@ -127,6 +140,99 @@ class SaleOrder(models.Model):
             }
         }
 
+    @api.model
+    def default_get(self, fields_list):
+        """Переопределяем default_get для полного отключения пустых строк"""
+        result = super().default_get(fields_list)
+        
+        # Полностью отключаем создание пустых строк в order_line
+        if 'order_line' in fields_list:
+            result['order_line'] = []
+        
+        return result
+
+    @api.model
+    def _get_default_order_line(self):
+        """Переопределяем метод для полного отключения пустых строк"""
+        # Не создаем никаких пустых строк
+        return []
+
+    @api.onchange('order_line')
+    def _onchange_order_line_limit(self):
+        """Ограничиваем количество пустых строк в order_line до одной"""
+        if self.order_line:
+            # Считаем пустые строки (без product_id)
+            empty_lines = self.order_line.filtered(lambda l: not l.product_id)
+            
+            if len(empty_lines) > 1:
+                # Оставляем только первую пустую строку
+                lines_to_remove = empty_lines[1:]
+                for line in lines_to_remove:
+                    self.order_line = [(2, line.id, 0)]
+                
+                return {
+                    'warning': {
+                        'title': 'Ограничение строк',
+                        'message': 'Можно создать только одну пустую строку в Order Lines. Лишние строки были удалены.',
+                    }
+                }
+
+    @api.model
+    def _get_default_order_line(self):
+        """Переопределяем метод для полного отключения пустых строк"""
+        # Не создаем никаких пустых строк
+        return []
+
+    @api.model
+    def create(self, vals):
+        """Переопределяем create для валидации обязательных полей"""
+        # Проверяем partner_id перед созданием
+        if not vals.get('partner_id'):
+            raise ValidationError(_('Поле Partner обязательно для заполнения. Пожалуйста, выберите партнера.'))
+        
+        # Автоматически заполняем адреса если не указаны
+        if vals.get('partner_id') and not vals.get('partner_invoice_id'):
+            vals['partner_invoice_id'] = vals['partner_id']
+        if vals.get('partner_id') and not vals.get('partner_shipping_id'):
+            vals['partner_shipping_id'] = vals['partner_id']
+        
+        # Ограничиваем количество пустых строк в order_line
+        if 'order_line' in vals and not self.env.context.get('skip_empty_line_limit'):
+            order_lines = vals.get('order_line', [])
+            if order_lines:
+                # Фильтруем пустые строки (без product_id)
+                empty_lines = [line for line in order_lines if isinstance(line, (list, tuple)) and len(line) >= 2 and line[0] == 0 and not line[2].get('product_id')]
+                filled_lines = [line for line in order_lines if isinstance(line, (list, tuple)) and len(line) >= 2 and line[0] == 0 and line[2].get('product_id')]
+                
+                # Оставляем только одну пустую строку
+                if len(empty_lines) > 1:
+                    vals['order_line'] = [empty_lines[0]] + filled_lines
+                elif len(empty_lines) == 1:
+                    vals['order_line'] = empty_lines + filled_lines
+            
+        return super().create(vals)
+
+    @api.model
+    def _get_default_order_line(self):
+        """Переопределяем метод для полного отключения пустых строк"""
+        # Не создаем никаких пустых строк
+        return []
+
+    def write(self, vals):
+        """Переопределяем write для валидации обязательных полей"""
+        # Проверяем partner_id только если он изменяется и становится пустым
+        if 'partner_id' in vals and not vals['partner_id']:
+            raise ValidationError(_('Поле Partner обязательно для заполнения. Пожалуйста, выберите партнера.'))
+        
+        # Автоматически заполняем адреса при изменении партнера
+        if vals.get('partner_id'):
+            if not vals.get('partner_invoice_id'):
+                vals['partner_invoice_id'] = vals['partner_id']
+            if not vals.get('partner_shipping_id'):
+                vals['partner_shipping_id'] = vals['partner_id']
+        
+        return super().write(vals)
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
@@ -169,6 +275,32 @@ class SaleOrderLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Ограничиваем количество пустых строк до одной
+        if not self.env.context.get('skip_empty_line_limit'):
+            # Проверяем, создаются ли пустые строки (без product_id)
+            empty_lines = [vals for vals in vals_list if not vals.get('product_id') and not vals.get('product_template_id')]
+            
+            if empty_lines:
+                # Получаем order_id из контекста или из vals
+                order_id = self.env.context.get('default_order_id')
+                if not order_id and vals_list:
+                    order_id = vals_list[0].get('order_id')
+                
+                if order_id:
+                    # Считаем существующие пустые строки в заказе
+                    order = self.env['sale.order'].browse(order_id)
+                    existing_empty_lines = order.order_line.filtered(
+                        lambda l: not l.product_id and not l.product_template_id
+                    )
+                    
+                    # Если уже есть пустые строки, не создаем новые
+                    if existing_empty_lines:
+                        return self.env['sale.order.line']
+                    
+                    # Ограничиваем до одной пустой строки
+                    if len(empty_lines) > 1:
+                        vals_list = [empty_lines[0]] + [vals for vals in vals_list if vals.get('product_id') or vals.get('product_template_id')]
+        
         lines = super().create(vals_list)
         for line in lines:
             if line.product_template_id and line.order_id:

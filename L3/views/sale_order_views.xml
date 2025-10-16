@@ -6,6 +6,11 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <!-- Устанавливаем минимальное число пустых строк в order_line = 1 -->
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="options">{'create_min_rows': 1}</attribute>
+                <attribute name="widget">order_line_single</attribute>
+            </xpath>
             <!-- Добавляем умную кнопку Delivery в шапку -->
             <xpath expr="//header" position="inside">
                 <button name="action_view_delivery_custom" type="object" class="oe_stat_button" invisible="['|', ('state', 'in', ('draft','sent')), ('delivery_count', '=', 0)]">
@@ -146,6 +151,23 @@
         </field>
     </record>
 
+    <!-- Временно отключено для диагностики -->
+    <!--
+    <record id="view_sale_order_line_tree_readonly_highlight" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.readonly.highlight</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom']" position="attributes">
+                <attribute name="class">o_field_readonly_highlight</attribute>
+            </xpath>
+            <xpath expr="//field[@name='price_subtotal']" position="attributes">
+                <attribute name="class">o_field_readonly_highlight</attribute>
+            </xpath>
+        </field>
+    </record>
+    -->
+
     <!-- Наследование form view для изменения заголовка Customer на Partner -->
     <record id="view_quotation_form_inherit_customer_to_partner" model="ir.ui.view">
         <field name="name">sale.order.form.inherit.customer.to.partner</field>
@@ -155,6 +177,7 @@
             <!-- Изменяем заголовок поля Customer на Partner в форме -->
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="string">Partner</attribute>
+                <attribute name="class">o_field_partner_no_highlight</attribute>
             </xpath>
         </field>
     </record>
@@ -181,6 +204,19 @@
             <!-- Изменяем заголовок столбца Customer на Partner в quotations tree -->
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="string">Partner</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Дополнительное наследование для всех form view чтобы убрать красную подсветку -->
+    <record id="view_sale_order_form_no_highlight_partner" model="ir.ui.view">
+        <field name="name">sale.order.form.no.highlight.partner</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем класс для убирания красной подсветки -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="class">o_field_partner_no_highlight</attribute>
             </xpath>
         </field>
     </record>

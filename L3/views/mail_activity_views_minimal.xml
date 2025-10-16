@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Минимальное наследование формы активности -->
+    <record id="view_activity_form_salesperson_minimal" model="ir.ui.view">
+        <field name="name">mail.activity.form.salesperson.minimal</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем поле salesperson в конец формы -->
+            <xpath expr="//form" position="inside">
+                <group>
+                    <field name="salesperson_id" string="Salesperson"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Минимальное наследование tree view активности -->
+    <record id="view_activity_tree_salesperson_minimal" model="ir.ui.view">
+        <field name="name">mail.activity.tree.salesperson.minimal</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_tree"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем колонку salesperson в конец списка -->
+            <xpath expr="//tree" position="inside">
+                <field name="salesperson_id" string="Salesperson" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
+

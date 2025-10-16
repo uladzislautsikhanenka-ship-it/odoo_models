@@ -1,0 +1,25 @@
+/* Безопасные стили для read-only полей */
+
+/* Основные стили для read-only полей */
+.o_field_readonly_highlight {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+}
+
+/* Hover эффект */
+.o_field_readonly_highlight:hover {
+    background-color: #e2e3e5;
+    cursor: not-allowed;
+}
+
+/* Стили для поля salesperson в активности */
+.o_field_salesperson_id {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+
+

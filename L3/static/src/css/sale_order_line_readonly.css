@@ -1,0 +1,180 @@
+/* Стили для подсветки read-only полей в линиях заказа */
+
+/* Основные стили для read-only полей в линиях заказа */
+.o_list_view .o_field_readonly,
+.o_list_view .o_readonly_modifier,
+.o_list_view .o_readonly,
+.o_list_view input[readonly],
+.o_list_view .o_field_number[readonly],
+.o_list_view .o_field_float[readonly],
+.o_list_view .o_field_monetary[readonly] {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    border: 1px solid #dee2e6 !important;
+    font-style: italic !important;
+}
+
+/* Специфичные стили для полей в линиях заказа */
+.o_list_view .o_data_row .o_field_readonly,
+.o_list_view .o_data_row .o_readonly_modifier {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border-left: 3px solid #6c757d !important;
+    padding-left: 8px !important;
+}
+
+/* Стили для вычисляемых полей (computed fields) */
+.o_list_view .o_field_computed,
+.o_list_view .o_field_compute {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    border: 1px solid #ffeaa7 !important;
+    font-weight: 500 !important;
+}
+
+/* Стили для полей с атрибутом readonly="1" */
+.o_list_view field[readonly="1"],
+.o_list_view .o_field_readonly[readonly="1"] {
+    background-color: #d1ecf1 !important;
+    color: #0c5460 !important;
+    border: 1px solid #bee5eb !important;
+}
+
+/* Стили для полей доставки и выставления счетов */
+.o_list_view .o_field_qty_delivered,
+.o_list_view .o_field_qty_invoiced,
+.o_list_view .o_field_product_uom {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    border: 1px solid #f5c6cb !important;
+    font-weight: 600 !important;
+}
+
+/* Стили для полей цен */
+.o_list_view .o_field_price_subtotal,
+.o_list_view .o_field_price_total {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    border: 1px solid #c3e6cb !important;
+    font-weight: 600 !important;
+}
+
+/* Hover эффекты для read-only полей */
+.o_list_view .o_field_readonly:hover,
+.o_list_view .o_readonly_modifier:hover {
+    background-color: #e2e3e5 !important;
+    cursor: not-allowed !important;
+}
+
+/* Стили для заголовков колонок с read-only полями */
+.o_list_view .o_column_readonly {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    font-weight: 600 !important;
+}
+
+/* Стили для ячеек в таблице линий заказа */
+.o_list_view .o_data_row td.o_field_readonly,
+.o_list_view .o_data_row td.o_readonly_modifier {
+    position: relative !important;
+}
+
+.o_list_view .o_data_row td.o_field_readonly::before,
+.o_list_view .o_data_row td.o_readonly_modifier::before {
+    content: "🔒" !important;
+    position: absolute !important;
+    left: 5px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 12px !important;
+    opacity: 0.7 !important;
+}
+
+/* Стили для полей в форме заказа */
+.o_form_view .o_field_readonly,
+.o_form_view .o_readonly_modifier {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    border: 1px solid #dee2e6 !important;
+}
+
+/* Стили для полей в tree view линий заказа */
+.o_list_view .o_data_row .o_field_qty_delivered,
+.o_list_view .o_data_row .o_field_qty_invoiced,
+.o_list_view .o_data_row .o_field_product_uom,
+.o_list_view .o_data_row .o_field_price_subtotal,
+.o_list_view .o_data_row .o_field_price_total {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    border: 1px solid #ffeaa7 !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+}
+
+/* Дополнительные стили для выделения */
+.o_list_view .o_data_row .o_field_readonly {
+    box-shadow: inset 0 0 0 2px #6c757d !important;
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+    .o_list_view .o_field_readonly,
+    .o_list_view .o_readonly_modifier {
+        font-size: 14px !important;
+        padding: 8px !important;
+    }
+}
+
+/* Стили для класса o_field_readonly_highlight */
+.o_field_readonly_highlight {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    border: 1px solid #dee2e6 !important;
+    font-style: italic !important;
+    position: relative !important;
+}
+
+.o_field_readonly_highlight::before {
+    content: "🔒" !important;
+    position: absolute !important;
+    left: 5px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 12px !important;
+    opacity: 0.7 !important;
+    pointer-events: none !important;
+}
+
+.o_field_readonly_highlight:hover {
+    background-color: #e2e3e5 !important;
+    cursor: not-allowed !important;
+}
+
+/* Специфичные стили для разных типов read-only полей с классом highlight */
+.o_field_product_uom.o_field_readonly_highlight {
+    background-color: #d1ecf1 !important;
+    color: #0c5460 !important;
+    border: 1px solid #bee5eb !important;
+    font-weight: 600 !important;
+}
+
+.o_field_price_subtotal.o_field_readonly_highlight {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    border: 1px solid #c3e6cb !important;
+    font-weight: 600 !important;
+}
+
+.o_field_price_unit.o_field_readonly_highlight {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    border: 1px solid #ffeaa7 !important;
+    font-weight: 600 !important;
+}
+
+.o_field_discount.o_field_readonly_highlight {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    border: 1px solid #f5c6cb !important;
+    font-weight: 600 !important;
+}

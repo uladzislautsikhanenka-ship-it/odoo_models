@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Наследование формы активности для добавления поля salesperson -->
+    <record id="view_activity_form_salesperson" model="ir.ui.view">
+        <field name="name">mail.activity.form.salesperson</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем поле salesperson после поля user_id -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_id" 
+                       string="Salesperson" 
+                       placeholder="Select salesperson"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Наследование tree view активности для добавления колонки salesperson -->
+    <record id="view_activity_tree_salesperson" model="ir.ui.view">
+        <field name="name">mail.activity.tree.salesperson</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_tree"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем колонку salesperson после колонки user_id -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_id" string="Salesperson" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Наследование календарного представления активности -->
+    <record id="view_activity_calendar_salesperson" model="ir.ui.view">
+        <field name="name">mail.activity.calendar.salesperson</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_calendar"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем поле salesperson в календарное представление -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Наследование поискового представления активности -->
+    <record id="view_activity_search_salesperson" model="ir.ui.view">
+        <field name="name">mail.activity.search.salesperson</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_search"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем поле salesperson в поиск -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_id" string="Salesperson"/>
+            </xpath>
+            
+            <!-- Добавляем фильтр по salesperson -->
+            <xpath expr="//filter[@name='my_activities']" position="after">
+                <filter name="my_salesperson_activities" 
+                        string="My Salesperson Activities" 
+                        domain="[('salesperson_id', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

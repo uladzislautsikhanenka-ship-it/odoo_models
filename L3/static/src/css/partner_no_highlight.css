@@ -1,0 +1,54 @@
+/* CSS для убирания красной подсветки поля Partner */
+
+/* Убираем красную подсветку для поля partner_id */
+.o_field_partner_no_highlight .o_input {
+    border: 1px solid #ced4da !important;
+    box-shadow: none !important;
+}
+
+.o_field_partner_no_highlight .o_input:focus {
+    border-color: #80bdff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+.o_field_partner_no_highlight .o_input:invalid {
+    border-color: #ced4da !important;
+    box-shadow: none !important;
+}
+
+/* Убираем красную подсветку для Many2one поля */
+.o_field_partner_no_highlight .o_field_many2one .o_input_dropdown {
+    border: 1px solid #ced4da !important;
+}
+
+.o_field_partner_no_highlight .o_field_many2one .o_input_dropdown:focus {
+    border-color: #80bdff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+/* Убираем красную подсветку для кнопки создания нового партнера */
+.o_field_partner_no_highlight .o_field_many2one .o_external_button {
+    border: 1px solid #ced4da !important;
+}
+
+/* Убираем красную подсветку для иконки поиска */
+.o_field_partner_no_highlight .o_field_many2one .o_dropdown_button {
+    border: 1px solid #ced4da !important;
+}
+
+/* Стили для предупреждающего сообщения */
+.o_field_partner_no_highlight + .o_field_invalid_message {
+    display: none !important;
+}
+
+/* Альтернативный стиль - тонкая рамка вместо красной */
+.o_field_partner_no_highlight.o_field_invalid .o_input {
+    border: 2px solid #ffc107 !important;
+    background-color: #fff3cd !important;
+}
+
+.o_field_partner_no_highlight.o_field_invalid .o_input:focus {
+    border-color: #ffc107 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25) !important;
+}
+

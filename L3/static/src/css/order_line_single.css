@@ -1,0 +1,20 @@
+/* Точное скрытие 4 пустых строк с colspan="13" */
+.o_field_x2many_list[name="order_line"] tbody tr:has(> td[colspan="13"]) {
+    display: none !important;
+}
+
+/* Альтернативный селектор для пустых строк */
+.o_field_x2many_list[name="order_line"] tbody tr:has(> td[colspan]:empty) {
+    display: none !important;
+}
+
+/* Скрываем все строки с пустыми td */
+.o_field_x2many_list[name="order_line"] tbody tr:has(> td:empty) {
+    display: none !important;
+}
+
+/* Показываем только строки с данными */
+.o_field_x2many_list[name="order_line"] tbody tr:has(.o_data_cell[name="product_id"] input[value]) {
+    display: table-row !important;
+}
+

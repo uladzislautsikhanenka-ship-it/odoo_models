@@ -1,0 +1,31 @@
+/* Универсальное скрытие лишних пустых строк в o2m полях */
+
+/* Скрываем все пустые строки кроме первой */
+.o_field_x2many_list tbody tr.o_data_row:nth-child(n+2):not(:has(.o_data_cell input[value])) {
+    display: none !important;
+}
+
+/* Скрываем технические пустые строки с colspan */
+.o_field_x2many_list tbody tr:has(> td[colspan]:empty) {
+    display: none !important;
+}
+
+/* Скрываем пустые строки после строки с кнопками */
+.o_field_x2many_list .o_field_x2many_list_row_add ~ tr:not(:has(.o_data_cell input[value])) {
+    display: none !important;
+}
+
+/* Показываем строки с данными */
+.o_field_x2many_list tbody tr:has(.o_data_cell input[value]) {
+    display: table-row !important;
+}
+
+/* Специфично для order_line */
+.o_field_x2many_list[name="order_line"] tbody tr:has(> td[colspan="13"]) {
+    display: none !important;
+}
+
+/* Скрываем пустые строки в любых o2m полях */
+.o_field_x2many_list tbody tr:has(> td:empty) {
+    display: none !important;
+}

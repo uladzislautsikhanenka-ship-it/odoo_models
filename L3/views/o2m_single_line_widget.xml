@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Применяем виджет single_line к полю order_line -->
+    <record id="view_sale_order_form_single_line_widget" model="ir.ui.view">
+        <field name="name">sale.order.form.single.line.widget</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Применяем виджет single_line к полю order_line -->
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="widget">single_line</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

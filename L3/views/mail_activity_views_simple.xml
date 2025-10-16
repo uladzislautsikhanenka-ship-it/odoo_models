@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Простое наследование формы активности для добавления поля salesperson -->
+    <record id="view_activity_form_salesperson_simple" model="ir.ui.view">
+        <field name="name">mail.activity.form.salesperson.simple</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем поле salesperson после поля user_id -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_id" string="Salesperson"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Простое наследование tree view активности -->
+    <record id="view_activity_tree_salesperson_simple" model="ir.ui.view">
+        <field name="name">mail.activity.tree.salesperson.simple</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_tree"/>
+        <field name="arch" type="xml">
+            <!-- Добавляем колонку salesperson -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_id" string="Salesperson" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
